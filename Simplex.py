@@ -1,4 +1,6 @@
 import sys
+import pandas as pd
+import numpy as np
 
 def inputZ():
     print(f'Simplex Method:\t[ Z = ax1 + bx2 + cx3 ]')
@@ -12,7 +14,10 @@ def StandardForm(A):
     n = len(A)
     result = A
     if A[n-1] < 0:
+        result[n-1] *= -1 #= [i * -1 for i in A]
+    else:
         result = [i * -1 for i in A]
+        result[n - 1] *= -1
     n = A[n-1]
     if n > 1:
         result = [i/n for i in A]
@@ -21,7 +26,7 @@ def StandardForm(A):
 def Constrs():
     print(f'Constraints : [ ax1 + bx2 + cx3 >= d ]')
     while True:
-        constr = input(f'Enter number of constraints : ')
+        constr = input(f'Enter number of constraints : ').strip()
         if constr.isdigit():
             constr = int(constr)
             if constr > 0:
@@ -58,10 +63,20 @@ def Tableau(A, C):
     X.append(A)
     X.extend(C)
     return X
+def CheckOptimality(df):
+    X = df.head(1)
+    print(X)
+    for i in range(len(X)):
+        if df.loc[i] < 0:
+            return False
+    return True
 
 if __name__ == '__main__':
     A = inputZ() # Iput Standar for of Z
     C = Constrs() # Input Constraints
     X = Tableau(A, C) # Make Tableau
-    print(X)
+    df = pd.DataFrame(X)
+    print(df)
+    flag = CheckOptimality(df)
+    print(flag)
 
